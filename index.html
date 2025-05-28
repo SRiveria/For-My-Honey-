@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Learning Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Quiz Options Modal with "Di akhir kuis" selected by default -->
+    <div id="quiz-options-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cog"></i> Pengaturan Kuis</h2>
+            </div>
+            <div class="modal-body">
+                <div class="option-item">
+                    <h3>Tampilkan jawaban:</h3>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="answer-display" value="immediate">
+                            <span>Saat dijawab</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="answer-display" value="end" checked>
+                            <span>Di akhir kuis</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button onclick="startQuizWithOptions()" class="action-btn primary">
+                    <i class="fas fa-play"></i>
+                    Mulai Kuis
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>Smart Learning Hub</h1>
+            </div>
+            <p class="subtitle">Persiapkan Diri dengan Optimal untuk Asesmen Kenaikan Kelas 2025 Teknik Elektronika Industri Kelas XI</p>
+        </header>
+
+        <!-- Menu Pilih Mapel -->
+        <div id="menu-container" class="menu-container">
+            <h2>
+                <i class="fas fa-book-open"></i>
+                Pilih Mata Pelajaran
+            </h2>
+            <div class="subjects-grid">
+                <!-- Mata Pelajaran Wajib -->
+                <div class="subject-category">
+                    <h3><i class="fas fa-star"></i> Mata Pelajaran Wajib</h3>
+                    <div class="btn-container">
+                        <button onclick="loadMateri('ppkn')" class="subject-btn wajib">
+                            <i class="fas fa-flag"></i>
+                            <span>PPKN</span>
+                        </button>
+                        <button onclick="loadMateri('bindo')" class="subject-btn wajib">
+                            <i class="fas fa-language"></i>
+                            <span>Bahasa Indonesia</span>
+                        </button>
+                        <button onclick="loadMateri('agama')" class="subject-btn wajib">
+                            <i class="fas fa-pray"></i>
+                            <span>Pendidikan Agama</span>
+                        </button>
+                        <button onclick="loadMateri('binggris')" class="subject-btn wajib">
+                            <i class="fas fa-globe"></i>
+                            <span>Bahasa Inggris</span>
+                        </button>
+                        <button onclick="loadMateri('matematika')" class="subject-btn wajib">
+                            <i class="fas fa-square-root-alt"></i>
+                            <span>Matematika</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mata Pelajaran Kejuruan -->
+                <div class="subject-category">
+                    <h3><i class="fas fa-tools"></i> Mata Pelajaran Kejuruan</h3>
+                    <div class="btn-container">
+                        <button onclick="loadMateri('kk1')" class="subject-btn kejuruan">
+                            <i class="fas fa-cog"></i>
+                            <span>Kompetensi Keahlian 1</span>
+                        </button>
+                        <button onclick="loadMateri('kk2')" class="subject-btn kejuruan">
+                            <i class="fas fa-laptop-code"></i>
+                            <span>Kompetensi Keahlian 2</span>
+                        </button>
+                        <button onclick="loadMateri('kk3')" class="subject-btn kejuruan">
+                            <i class="fas fa-wrench"></i>
+                            <span>Kompetensi Keahlian 3</span>
+                        </button>
+                        <button onclick="loadMateri('mapel-pilihan')" class="subject-btn kejuruan">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span>Mapel Pilihan</span>
+                        </button>
+                        <button onclick="loadMateri('pkwu')" class="subject-btn kejuruan">
+                            <i class="fas fa-store"></i>
+                            <span>PKWU</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mata Pelajaran Lainnya -->
+                <div class="subject-category">
+                    <h3><i class="fas fa-plus-circle"></i> Mata Pelajaran Lainnya</h3>
+                    <div class="btn-container">
+                        <button onclick="loadMateri('mulok')" class="subject-btn lainnya">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <span>Muatan Lokal</span>
+                        </button>
+                        <button onclick="loadMateri('sejarah')" class="subject-btn lainnya">
+                            <i class="fas fa-landmark"></i>
+                            <span>Sejarah</span>
+                        </button>
+                        <button onclick="loadMateri('penjasorkes')" class="subject-btn lainnya">
+                            <i class="fas fa-running"></i>
+                            <span>Penjasorkes</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Materi -->
+        <div id="materi-container" class="content-container" style="display: none;">
+            <button onclick="backToMenu()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+            
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="materi-progress" style="width: 50%"></div>
+                </div>
+                <span class="progress-text">Tahap 1 dari 2: Membaca Materi</span>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-book"></i>
+                    <h2 id="judul-materi"></h2>
+                </div>
+                <div class="card-content">
+                    <p id="isi-materi"></p>
+                </div>
+                <div class="card-actions">
+                    <button onclick="mulaiKuis()" class="action-btn primary">
+                        <i class="fas fa-play"></i>
+                        Mulai Kuis
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kuis -->
+        <div id="quiz-container" class="content-container" style="display: none;">
+            <button onclick="backToMateri()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali ke Materi
+            </button>
+            
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="quiz-progress" style="width: 0%"></div>
+                </div>
+                <span class="progress-text" id="progress-text">Pertanyaan 1 dari 0</span>
+            </div>
+
+            <div class="quiz-header">
+                <h2 id="judul-kuis">
+                    <i class="fas fa-question-circle"></i>
+                    <span id="kuis-title"></span>
+                </h2>
+                <div class="quiz-stats">
+                    <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span id="timer">00:00</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-chart-line"></i>
+                        <span id="score">Skor: 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div id="question-container">
+                    <div id="question" class="question-text">Pertanyaan akan muncul di sini</div>
+                    <div id="answer-buttons" class="answers-grid"></div>
+                    <div id="difficulty" class="difficulty-text" style="margin-top: 12px;"></div>
+                </div>
+                <div class="card-actions">
+                    <button id="prev-btn" class="action-btn secondary" style="display: none;">
+                        <i class="fas fa-arrow-left"></i>
+                        Sebelumnya
+                    </button>
+                    <button id="next-btn" class="action-btn primary" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        Selanjutnya
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Modal -->
+        <div id="results-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-trophy"></i> Hasil Kuis</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="result-stats">
+                        <div class="result-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Benar: <strong id="correct-count">0</strong></span>
+                        </div>
+                        <div class="result-item">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Salah: <strong id="wrong-count">0</strong></span>
+                        </div>
+                        <div class="result-item">
+                            <i class="fas fa-percentage"></i>
+                            <span>Nilai: <strong id="final-score">0%</strong></span>
+                        </div>
+                        <div class="result-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Waktu: <strong id="total-time">00:00</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button onclick="restartQuiz()" class="action-btn secondary">
+                        <i class="fas fa-redo"></i>
+                        Ulangi Kuis
+                    </button>
+                    <button onclick="backToMenu()" class="action-btn primary">
+                        <i class="fas fa-home"></i>
+                        Kembali ke Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="credits">
+            <p>Made with <strong><i class="fas fa-robot"></i></strong> by <strong>Initial D</strong></p>
+            <p>© 2025 <strong>Smart Learning Hub</strong>. All rights reserved.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="https://github.com/Dytmenn" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://instagram.com/diyytmen_" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
